@@ -4,6 +4,8 @@ frontend:
     preBuild:
       commands:
         - cd almacen_frontend
+        - nvm install 20
+        - nvm use 20
         - npm ci
     build:
       commands:
@@ -14,4 +16,4 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - almacen_frontend/node_modules/**/*
+      - almacen_frontend/node_modules/**/* 
