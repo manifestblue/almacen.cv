@@ -330,7 +330,9 @@ const {
   filteredCount,
   isLoading,
   error,
-  searchTerm
+  searchTerm,
+  sortBy,
+  sortOrder
 } = store
 
 const highValueCount = computed(() => 
@@ -342,7 +344,7 @@ const riskCount = computed(() =>
 )
 
 const totalPages = computed(() => 
-  Math.ceil(filteredCount.value / itemsPerPage)
+  Math.ceil(filteredCount / itemsPerPage)
 )
 
 const startIndex = computed(() => 
@@ -350,11 +352,11 @@ const startIndex = computed(() =>
 )
 
 const endIndex = computed(() => 
-  Math.min(startIndex.value + itemsPerPage, filteredCount.value)
+  Math.min(startIndex.value + itemsPerPage, filteredCount)
 )
 
 const paginatedCustomers = computed(() => 
-  filteredCustomers.value.slice(startIndex.value, startIndex.value + itemsPerPage)
+  filteredCustomers.slice(startIndex.value, startIndex.value + itemsPerPage)
 )
 
 const visiblePages = computed(() => {
@@ -428,7 +430,7 @@ const getProbabilityTextColor = (probability: number) => {
 }
 
 // Watch for search changes to reset pagination
-watch(searchTerm, () => {
+watch(() => searchTerm, () => {
   currentPage.value = 1
 })
 
