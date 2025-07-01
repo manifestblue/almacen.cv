@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd almacen_frontend
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: almacen_frontend/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - almacen_frontend/node_modules/**/*
