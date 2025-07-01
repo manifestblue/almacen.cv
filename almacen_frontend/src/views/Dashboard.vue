@@ -11,12 +11,12 @@
           <div class="flex items-center space-x-4">
             <button
               @click="refreshData"
-              :disabled="isLoading"
+              :disabled="store.isLoading"
               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ArrowPathIcon v-if="!isLoading" class="h-4 w-4 mr-2" />
+              <ArrowPathIcon v-if="!store.isLoading" class="h-4 w-4 mr-2" />
               <div v-else class="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-              {{ isLoading ? 'Cargando...' : 'Actualizar' }}
+              {{ store.isLoading ? 'Cargando...' : 'Actualizar' }}
             </button>
           </div>
         </div>
@@ -36,7 +36,7 @@
               <div class="ml-5 w-0 flex-1">
                 <dl>
                   <dt class="text-sm font-medium text-gray-500 truncate">Total Clientes</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ totalCustomers }}</dd>
+                  <dd class="text-lg font-medium text-gray-900">{{ store.totalCustomers }}</dd>
                 </dl>
               </div>
             </div>
@@ -52,7 +52,7 @@
               <div class="ml-5 w-0 flex-1">
                 <dl>
                   <dt class="text-sm font-medium text-gray-500 truncate">Filtrados</dt>
-                  <dd class="text-lg font-medium text-gray-900">{{ filteredCount }}</dd>
+                  <dd class="text-lg font-medium text-gray-900">{{ store.filteredCount }}</dd>
                 </dl>
               </div>
             </div>
@@ -93,13 +93,13 @@
       </div>
 
       <!-- Error Message -->
-      <div v-if="error" class="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+      <div v-if="store.error" class="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
         <div class="flex">
           <ExclamationCircleIcon class="h-5 w-5 text-red-400" />
           <div class="ml-3">
             <h3 class="text-sm font-medium text-red-800">Error</h3>
             <div class="mt-2 text-sm text-red-700">
-              <p>{{ error }}</p>
+              <p>{{ store.error }}</p>
             </div>
             <div class="mt-4">
               <button
@@ -125,7 +125,7 @@
                 </div>
                 <input
                   id="search"
-                  v-model="searchTerm"
+                  v-model="store.searchTerm"
                   type="text"
                   placeholder="Buscar por ID de cliente..."
                   class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -140,14 +140,14 @@
       <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-4 py-5 sm:p-6">
           <!-- Loading State -->
-          <div v-if="isLoading" class="space-y-4">
+          <div v-if="store.isLoading" class="space-y-4">
             <div v-for="i in 5" :key="i" class="animate-pulse">
               <div class="h-12 bg-gray-200 rounded"></div>
             </div>
           </div>
 
           <!-- Table Content -->
-          <div v-else-if="filteredCustomers.length > 0" class="overflow-x-auto">
+          <div v-else-if="store.filteredCustomers.length > 0" class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
@@ -162,11 +162,11 @@
                       <div class="flex flex-col">
                         <ChevronUpIcon 
                           class="h-3 w-3" 
-                          :class="sortBy === column.key && sortOrder === 'asc' ? 'text-indigo-600' : 'text-gray-300'"
+                          :class="store.sortBy === column.key && store.sortOrder === 'asc' ? 'text-indigo-600' : 'text-gray-300'"
                         />
                         <ChevronDownIcon 
                           class="h-3 w-3 -mt-1" 
-                          :class="sortBy === column.key && sortOrder === 'desc' ? 'text-indigo-600' : 'text-gray-300'"
+                          :class="store.sortBy === column.key && store.sortOrder === 'desc' ? 'text-indigo-600' : 'text-gray-300'"
                         />
                       </div>
                     </div>
@@ -226,13 +226,13 @@
             <UsersIcon class="mx-auto h-12 w-12 text-gray-400" />
             <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron clientes</h3>
             <p class="mt-1 text-sm text-gray-500">
-              {{ searchTerm ? 'Intenta con un ID de cliente diferente.' : 'No hay datos disponibles.' }}
+              {{ store.searchTerm ? 'Intenta con un ID de cliente diferente.' : 'No hay datos disponibles.' }}
             </p>
           </div>
         </div>
 
         <!-- Pagination -->
-        <div v-if="filteredCustomers.length > 0" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <div v-if="store.filteredCustomers.length > 0" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div class="flex-1 flex justify-between sm:hidden">
             <button
               @click="previousPage"
@@ -257,7 +257,7 @@
                 a
                 <span class="font-medium">{{ endIndex }}</span>
                 de
-                <span class="font-medium">{{ filteredCount }}</span>
+                <span class="font-medium">{{ store.filteredCount }}</span>
                 resultados
               </p>
             </div>
@@ -323,18 +323,6 @@ const store = useCustomersStore()
 const currentPage = ref(1)
 const itemsPerPage = 20
 
-// Computed properties
-const {
-  filteredCustomers,
-  totalCustomers,
-  filteredCount,
-  isLoading,
-  error,
-  searchTerm,
-  sortBy,
-  sortOrder
-} = store
-
 const highValueCount = computed(() => 
   store.customers.filter(c => c.probabilidad_alto_valor > 0.75).length
 )
@@ -344,7 +332,7 @@ const riskCount = computed(() =>
 )
 
 const totalPages = computed(() => 
-  Math.ceil(filteredCount / itemsPerPage)
+  Math.ceil(store.filteredCount / itemsPerPage)
 )
 
 const startIndex = computed(() => 
@@ -352,11 +340,11 @@ const startIndex = computed(() =>
 )
 
 const endIndex = computed(() => 
-  Math.min(startIndex.value + itemsPerPage, filteredCount)
+  Math.min(startIndex.value + itemsPerPage, store.filteredCount)
 )
 
 const paginatedCustomers = computed(() => 
-  filteredCustomers.slice(startIndex.value, startIndex.value + itemsPerPage)
+  store.filteredCustomers.slice(startIndex.value, startIndex.value + itemsPerPage)
 )
 
 const visiblePages = computed(() => {
@@ -430,7 +418,7 @@ const getProbabilityTextColor = (probability: number) => {
 }
 
 // Watch for search changes to reset pagination
-watch(() => searchTerm, () => {
+watch(() => store.searchTerm, () => {
   currentPage.value = 1
 })
 
