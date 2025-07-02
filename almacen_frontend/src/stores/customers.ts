@@ -11,6 +11,8 @@ export const useCustomersStore = defineStore('customers', () => {
   const searchTerm = ref('')
   const sortBy = ref<keyof Customer>('probabilidad_alto_valor')
   const sortOrder = ref<'asc' | 'desc'>('desc')
+  // Filtro principal: 'all' | 'highValue' | 'risk'
+  const filterType = ref<'all' | 'highValue' | 'risk'>('all')
 
   // API URL
   const API_URL = 'https://tinq9oan6l.execute-api.us-east-1.amazonaws.com/analisis-clientes'
@@ -19,25 +21,31 @@ export const useCustomersStore = defineStore('customers', () => {
   const filteredCustomers = computed(() => {
     let filtered = customers.value
 
-    // Filter by search term
-    if (searchTerm.value) {
-      filtered = filtered.filter(customer => 
-        customer.CustomerID.toString().includes(searchTerm.value)
-      )
+    // Primera capa: filtro principal
+    if (filterType.value === 'highValue') {
+      filtered = filtered.filter(c => c.probabilidad_alto_valor >= 0.75)
+    } else if (filterType.value === 'risk') {
+      filtered = filtered.filter(c => c.probabilidad_alto_valor < 0.4)
+    }
+
+    // Segunda capa: filtro por ID exacto si searchTerm es numérico
+    const sanitized = searchTerm.value.trim()
+    if (sanitized !== '') {
+      if (/^\d+$/.test(sanitized)) {
+        filtered = filtered.filter(c => c.CustomerID === Number(sanitized))
+      }
     }
 
     // Sort
     filtered = [...filtered].sort((a, b) => {
       const aValue = a[sortBy.value]
       const bValue = b[sortBy.value]
-      
       if (sortOrder.value === 'asc') {
         return aValue > bValue ? 1 : -1
       } else {
         return aValue < bValue ? 1 : -1
       }
     })
-
     return filtered
   })
 
@@ -77,6 +85,11 @@ export const useCustomersStore = defineStore('customers', () => {
     error.value = null
   }
 
+  // Métodos para cambiar el filtro principal
+  const setFilterType = (type: 'all' | 'highValue' | 'risk') => {
+    filterType.value = type
+  }
+
   return {
     // State
     customers,
@@ -85,6 +98,7 @@ export const useCustomersStore = defineStore('customers', () => {
     searchTerm,
     sortBy,
     sortOrder,
+    filterType,
     
     // Getters
     filteredCustomers,
@@ -95,6 +109,7 @@ export const useCustomersStore = defineStore('customers', () => {
     fetchCustomers,
     setSearchTerm,
     setSort,
-    clearError
+    clearError,
+    setFilterType
   }
 }) 

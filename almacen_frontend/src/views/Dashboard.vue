@@ -27,7 +27,11 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <button
+          class="bg-white overflow-hidden shadow rounded-lg focus:outline-none transition ring-2 ring-indigo-500/50"
+          :class="store.filterType === 'all' ? 'ring-2 ring-indigo-500' : 'hover:ring-2 hover:ring-indigo-300'"
+          @click="store.setFilterType('all')"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -41,7 +45,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
         <div class="bg-white overflow-hidden shadow rounded-lg">
           <div class="p-5">
@@ -59,7 +63,11 @@
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <button
+          class="bg-white overflow-hidden shadow rounded-lg focus:outline-none transition ring-2 ring-green-500/50"
+          :class="store.filterType === 'highValue' ? 'ring-2 ring-green-500' : 'hover:ring-2 hover:ring-green-300'"
+          @click="store.setFilterType('highValue')"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -73,9 +81,13 @@
               </div>
             </div>
           </div>
-        </div>
+        </button>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <button
+          class="bg-white overflow-hidden shadow rounded-lg focus:outline-none transition ring-2 ring-red-500/50"
+          :class="store.filterType === 'risk' ? 'ring-2 ring-red-500' : 'hover:ring-2 hover:ring-red-300'"
+          @click="store.setFilterType('risk')"
+        >
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -89,7 +101,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </button>
       </div>
 
       <!-- Error Message -->
