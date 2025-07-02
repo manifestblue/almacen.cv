@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div class="flex justify-between items-center py-6">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">Almacén.cv</h1>
@@ -24,7 +24,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -137,7 +137,7 @@
       </div>
 
       <!-- Table -->
-      <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="bg-white shadow rounded-lg overflow-x-auto">
         <div class="px-4 py-5 sm:p-6">
           <!-- Loading State -->
           <div v-if="store.isLoading" class="space-y-4">
